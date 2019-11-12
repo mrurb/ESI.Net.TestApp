@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using ESI.Net.TestApp.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -20,14 +21,14 @@ namespace ESI.Net.TestApp.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
             IEmailSender emailSender)
         {
@@ -82,15 +83,20 @@ namespace ESI.Net.TestApp.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
-            if (result.Succeeded)
+            if (user != null)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-                return LocalRedirect(returnUrl);
-            }
-            if (result.IsLockedOut)
-            {
+                if (await _signInManager.CanSignInAsync(user))
+                {
+                    AuthenticationProperties props = new AuthenticationProperties();
+                    props.StoreTokens(info.AuthenticationTokens);
+                    props.IsPersistent = true;
+                    await _signInManager.SignInAsync(user, props);
+                    _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                    return LocalRedirect(returnUrl);
+                }
                 return RedirectToPage("./Lockout");
             }
             else
@@ -122,7 +128,7 @@ namespace ESI.Net.TestApp.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser { UserName = info.Principal.Identity.Name, Email = Input.Email, CharID = int.Parse(info.ProviderKey) };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

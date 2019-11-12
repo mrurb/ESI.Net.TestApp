@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ESI.NET.Models.Skills.SkillQueueItem>
+
+@{
+    ViewData["Title"] = "SkillQueue";
+}
+
+<h1>SkillQueue</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SkillId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FinishDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FinishedLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QueuePosition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrainingStartSp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LevelEndSp)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.LevelStartSp)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SkillId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FinishDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FinishedLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QueuePosition)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TrainingStartSp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LevelEndSp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LevelStartSp)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -12,6 +12,7 @@ using ESI.Net.TestApp.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ESI.NET;
 
 namespace ESI.Net.TestApp
 {
@@ -30,8 +31,29 @@ namespace ESI.Net.TestApp
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ '";
+            });
+
+            services.AddAuthentication(options =>
+            {
+            })
+            .AddEVEOnline(options =>
+            {
+                options.ClientId = Configuration.GetValue<string>("ESIConfig:ClientId");
+                options.ClientSecret = Configuration.GetValue<string>("ESIConfig:SecretKey");
+                options.SaveTokens = true;
+                options.Scope.Add("esi-skills.read_skills.v1");
+                options.Scope.Add("esi-skills.read_skillqueue.v1");
+            });
+
+            services.AddEsi(Configuration.GetSection("ESIConfig"));
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
