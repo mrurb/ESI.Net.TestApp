@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ESI.NET.Models.Character.Blueprint>
+
+@{
+    ViewData["Title"] = "SkillQueue";
+}
+
+<h1>SkillQueue</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Runs)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeEfficiency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaterialEfficiency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocationId)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Runs)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeEfficiency)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaterialEfficiency)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocationId)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

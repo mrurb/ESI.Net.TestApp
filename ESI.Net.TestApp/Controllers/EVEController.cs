@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ESI.Net.TestApp.Data;
 using ESI.NET;
+using ESI.NET.Models.Character;
 using ESI.NET.Models.Skills;
 using ESI.NET.Models.SSO;
 using Microsoft.AspNetCore.Authentication;
@@ -44,6 +45,18 @@ namespace ESI.Net.TestApp.Controllers
             }
             return View(esiResponse.Data);
         }
-        
+
+        public async Task<IActionResult> Blueprints()
+        {
+            await Util.Esi.UpdateTokenAsync(await HttpContext.GetTokenAsync("refresh_token"), await userManager.GetUserAsync(User), esiClient);
+
+            EsiResponse<List<Blueprint>> esiResponse = await esiClient.Character.Blueprints(1);
+            if (esiResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception("Failed to get result", esiResponse.Exception);
+            }
+            return View(esiResponse.Data);
+        }
+
     }
 }
