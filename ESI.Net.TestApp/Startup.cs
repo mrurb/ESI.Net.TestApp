@@ -65,6 +65,7 @@ namespace ESI.Net.TestApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //Do not use in production
                 app.UseDatabaseErrorPage();
             }
             else
