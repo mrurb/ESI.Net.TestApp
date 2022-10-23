@@ -51,6 +51,9 @@ namespace ESI.Net.TestApp
                 options.Scope.Add("esi-skills.read_skills.v1");
                 options.Scope.Add("esi-skills.read_skillqueue.v1");
                 options.Scope.Add("esi-characters.read_blueprints.v1");
+                //EX. for custom callbackpath
+                //options.CallbackPath = "/mycustomcallback";
+                
             });
 
             services.AddEsi(Configuration.GetSection("ESIConfig"));
